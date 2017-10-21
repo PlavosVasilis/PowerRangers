@@ -1,0 +1,35 @@
+
+DROP DATABASE IF EXISTS energy_wallet;
+
+
+CREATE DATABASE energy_wallet;
+
+
+CREATE TABLE IF NOT EXISTS energy_wallet.USER(
+id int(50) UNSIGNED AUTO_INCREMENT,
+username VARCHAR(30) NOT NULL,
+password VARCHAR(30) NOT NULL, # must be hashed
+IBAN VARCHAR(35) NOT NULL,
+PRIMARY KEY (id)
+);
+
+
+
+CREATE TABLE IF NOT EXISTS energy_wallet.ORDER(
+id int(50) UNSIGNED AUTO_INCREMENT,
+user_id int(50) UNSIGNED,
+price DECIMAL(5,5) NOT NULL,
+volume DECIMAL(5,5) NOT NULL,
+side CHAR(1) NOT NULL,
+PRIMARY KEY (id),
+FOREIGN KEY (user_id) REFERENCES USER(id)
+);
+
+
+DESCRIBE energy_wallet.USER;
+
+DESCRIBE energy_wallet.ORDER;
+
+
+
+
