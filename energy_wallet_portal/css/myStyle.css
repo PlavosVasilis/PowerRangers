@@ -1,0 +1,32 @@
+body
+{
+    background-color: #1d1e1f;
+}
+
+.myTitle
+{
+    color: darkgray;
+}
+
+
+/* For scrolled Table */
+tbody
+{
+    display:block;
+    height:300px; /* The scrolled table height*/
+    overflow:auto;
+}
+
+thead, tbody tr
+{
+    display:table;
+    width:100%;
+    table-layout:fixed;
+}
+
+thead
+{
+    width: calc( 100% - 1em )
+}
+
+/* -- End Scrolled table -- */
