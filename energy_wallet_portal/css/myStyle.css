@@ -8,6 +8,11 @@ body
     color: darkgray;
 }
 
+.username
+{
+    color: #f7f7f9;
+}
+
 
 /* For scrolled Table */
 tbody

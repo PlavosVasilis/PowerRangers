@@ -1,3 +1,24 @@
+<?php
+session_start();
+
+if ( ! isset( $_SESSION['username'] ) || ! isset( $_SESSION['account_id'] ) || ! isset( $_SESSION['IBAN'] ) )
+{
+    header("Location: index.php");
+}
+
+if ( isset($_GET['logout']) )
+{
+    if ( $_GET['logout'] == 'yes' )
+    {
+        unset($_SESSION['username']);
+        unset($_SESSION['account_id']);
+        unset($_SESSION['IBAN']);
+        header("Location: index.php");
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +33,11 @@
 <body>
 
     <div class="container">
+
+        <?php
+            if ( isset( $_SESSION['username'] ) )
+                echo "<p class=username> Hello " . $_SESSION['username'] . " (<a href=\"/view.php?logout=yes\" title=\"Logout\">logout</a>)</p>" ;
+        ?>
 
         <h1 class="text-center myTitle">Order Book</h1>
 
