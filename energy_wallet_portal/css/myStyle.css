@@ -15,23 +15,23 @@ body
 
 
 /* For scrolled Table */
-tbody
-{
-    display:block;
-    height:300px; /* The scrolled table height*/
-    overflow:auto;
-}
+/*tbody*/
+/*{*/
+    /*display:block;*/
+    /*height:300px; !* The scrolled table height*!*/
+    /*overflow:auto;*/
+/*}*/
 
-thead, tbody tr
-{
-    display:table;
-    width:100%;
-    table-layout:fixed;
-}
+/*thead, tbody tr*/
+/*{*/
+    /*display:table;*/
+    /*width:100%;*/
+    /*table-layout:fixed;*/
+/*}*/
 
-thead
-{
-    width: calc( 100% - 1em )
-}
+/*thead*/
+/*{*/
+    /*width: calc( 100% - 1em )*/
+/*}*/
 
 /* -- End Scrolled table -- */

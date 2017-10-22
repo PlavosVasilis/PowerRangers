@@ -25,13 +25,14 @@ if ( isset( $_POST['username'] ) && isset( $_POST['password'] ) )
         {
             while( $row = $result->fetch_assoc() )
             {
+                $_SESSION["user_id"] = $row["id"];
                 $_SESSION["username"] = $row["username"];
                 $_SESSION["account_id"] = $row["account_id"];
                 $_SESSION["IBAN"] = $row["IBAN"];
             }
 
             print_r($_SESSION);
-            header("Location: view.php");
+            header("Location: trading.php");
         }
         else
         {
@@ -65,7 +66,7 @@ else
 <body>
 
 <div class="container">
-    <form class="form-signin" method="post" action="">
+    <form class="form-signin" method="post" action="trading.php">
 
         <h2 class="form-signin-heading my_head">Please login in</h2>
 
