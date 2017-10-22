@@ -9,6 +9,8 @@ if ( ! isset( $_SESSION['username'] ) || ! isset( $_SESSION['account_id'] ) || !
 // If it's ok
 else
 {
+    $delete_flag = 0;
+
     // Create a database connection
     $conn = new mysqli('localhost',
         'root',
@@ -22,24 +24,58 @@ else
 
     if ( isset( $_POST['add_submit'] ) )
     {
-        $add_query = "";
+        $query = "";
 
         if ( isset( $_POST['buyer_radio'] ) && isset( $_POST['price'] ) && isset( $_POST['volume'] ) )
         {
-            $add_query .= "INSERT INTO energy_wallet.ORDERS (user_id, price, volume, side) VALUES (";
-            $add_query .= $_SESSION['user_id'] . "," . $_POST['price'] . "," . $_POST['volume'] . "," . "'B' ) ;";
+            $query .= "SELECT ORDERS.id as order_id ";
+            $query .= "FROM USERS, ORDERS WHERE USERS.id = ORDERS.user_id and side='S' and ORDERS.volume =";
+            $query .= $_POST['volume'] . " and ORDERS.price = " . $_POST['price'];
+
+            $found = mysqli_query($conn, $query);
+
+            if ( $found )
+            {
+                $row = mysqli_fetch_array($found);
+                $del_q = "DELETE FROM energy_wallet.ORDERS WHERE id = " . $row["order_id"] ;
+
+                $result = mysqli_query($conn, $del_q);
+                $delete_flag = 1;
+            }
+
+            else
+            {
+                $query .= "INSERT INTO energy_wallet.ORDERS (user_id, price, volume, side) VALUES (";
+                $query .= $_SESSION['user_id'] . "," . $_POST['price'] . "," . $_POST['volume'] . "," . "'B' ) ;";
+
+                mysqli_query($conn, $query);
+            }
+
+
         }
 
         if ( isset( $_POST['seller_radio'] ) && isset( $_POST['price'] ) && isset( $_POST['volume'] ) )
         {
-            $add_query .= "INSERT INTO energy_wallet.ORDERS (user_id, price, volume, side) VALUES (";
-            $add_query .= $_SESSION['user_id'] . "," . $_POST['price'] . "," . $_POST['volume'] . "," . "'S' ) ;";
+//            $query .= "SELECT ORDERS.id as order_id, ORDERS.user_id, ORDERS.price, ORDERS.volume, ORDERS.side ";
+//            $query .= "FROM USERS, ORDERS WHERE USERS.id = ORDERS.user_id and side='B' and ORDERS.volume =";
+//            $query .= $_POST['volume'] . " and ORDERS.price = " . $_POST['price'];
+//
+//            $found = mysqli_query($conn, $query);
+//
+//            if ( ! $found )
+//            {
+                $query .= "INSERT INTO energy_wallet.ORDERS (user_id, price, volume, side) VALUES (";
+                $query .= $_SESSION['user_id'] . "," . $_POST['price'] . "," . $_POST['volume'] . "," . "'S' ) ;";
+
+                mysqli_query($conn, $query);
+//            }
+
         }
 
-        mysqli_query($conn, $add_query);
-    }
 
     }
+
+}
 
 
 if ( isset($_GET['logout']) )
@@ -97,16 +133,34 @@ if ( isset($_GET['logout']) )
 
     <br><br>
 
-
+<!--    <div class="alert alert-success" role="alert"> Συγχαρητήρια η συναλλαγή σας ολοκληρώθηκε! </div>-->
+<!--    <h3 class="text-success fa-align-center">Συγχαρητήρια η συναλλαγή σας ολοκληρώθηκε!</h3>-->
 
     <div class="container">
+        <div class="text-center text-success">
+            <?php
+            if ( $delete_flag == 1 )
+            {
+                echo "<h3>Συγχαρητήρια η συναλλαγή σας ολοκληρώθηκε!</h3>";
+                echo "<h4>Έγινε η πληρωμή μέσω τραπέζης και ενημερώθηκε ο διαχειριστής δικτύου.</h4>";
+            }
+            ?>
+
+        </div>
       <div class="row">
         <div class="col">
 
           <table class="table table-sm table-dark">
+              <thead>
+              <tr>
+                  <th>
+                      Producers
+                  </th>
+              </tr>
+              </thead>
             <thead>
               <tr>
-                <th scope="col">Seeder</th>
+                <th scope="col">Seller</th>
                 <th scope="col">Want</th>
                 <th scope="col">Price per KWH</th>
               </tr>
@@ -161,9 +215,16 @@ if ( isset($_GET['logout']) )
 
         <div class="col">
           <table class="table table-sm table-dark">
+              <thead>
+              <tr>
+                  <th>
+                      Consumers
+                  </th>
+              </tr>
+              </thead>
             <thead>
               <tr>
-                <th>Leecher</th>
+                <th>Buyer</th>
                 <th>Storage</th>
                 <th>Price per KWH</th>
               </tr>
@@ -215,6 +276,27 @@ if ( isset($_GET['logout']) )
 
     <aside class="call-to-action bg-primary text-white">
       <div class="container text-center">
+          <?php
+
+          $url = "https://monitoringapi.solaredge.com/site/12663/overview?api_key=3M02E1TOQF4ACXQCL6IKNUYO226R4768";
+
+          $ch = curl_init();
+          $timeout = 5;
+          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+          $data = curl_exec($ch);
+          curl_close($ch);
+
+          $manage = (array) json_decode($data, true);
+
+//          var_dump($manage);
+//          var_dump( $manage["overview"] ) ;
+//          var_dump( $manage["overview"]["lastDayData"]["energy"] ) ;
+
+//                      $manage["overview"]["lastDayData"]["energy"]/1000
+          ?>
+        <h4>Your last day kWh <?php echo '<span><b>' . $manage["overview"]["lastDayData"]["energy"]/1000 . '</b></span>' ?></h4>
         <h3>Hi! What do you want to do?</h3>
 
 <form method="post" action="">
@@ -256,6 +338,7 @@ if ( isset($_GET['logout']) )
         </div>
     </div>
 </form>
+
 
 
       </div>

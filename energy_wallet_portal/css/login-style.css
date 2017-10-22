@@ -7,6 +7,7 @@ body
 
 .my_head
 {
+    color:#f7f7f9;
     text-align: center;
     font-weight: bold;
 }
@@ -22,3 +23,4 @@ body
     background-color: #1e851b;
     cursor: pointer;
 }
+

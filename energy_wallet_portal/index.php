@@ -14,6 +14,7 @@ if ( isset( $_POST['username'] ) && isset( $_POST['password'] ) )
     {
         die("<b>Connection failed</b>: " . $conn->connect_error);
     }
+
     else
     {
         $sql = "SELECT id, username, password, account_id, IBAN FROM USERS WHERE username='" . $_POST['username'] . "'";
@@ -46,10 +47,10 @@ if ( isset( $_POST['username'] ) && isset( $_POST['password'] ) )
 
 
 }
-else
-{
-    echo "No POST request";
-}
+//else
+//{
+//    echo "No POST request";
+//}
 
 
 ?>
@@ -66,16 +67,16 @@ else
 <body>
 
 <div class="container">
-    <form class="form-signin" method="post" action="trading.php">
-
-        <h2 class="form-signin-heading my_head">Please login in</h2>
+    <h2 class="my_head"><b>C</b>ommunity <b>E</b>nergy <b>R</b>iver.</h2>
+    <form class="form-signin" method="post" action="">
+<!--        <h2 class="form-signin-heading my_head">Please login on</h2>-->
 
         <label class="sr-only" for="inputEmail">Email address</label>
         <input id="inputEmail" class="form-control" placeholder="Username" required="" autofocus="" name="username">
         <label class="sr-only" for="inputPassword">Password</label>
         <input id="inputPassword" class="form-control" placeholder="Password" required="" type="password" name="password">
 
-        <button class="btn btn-lg btn-primary btn-block my_btn" type="submit" name="submit">Login in</button>
+        <button class="btn btn-lg btn-primary btn-block my_btn" type="submit" name="submit">Login</button>
 
     </form>
 </div>
